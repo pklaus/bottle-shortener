@@ -10,15 +10,18 @@ from bottle import route, run, request, redirect, abort
 
 #keeper = URLKeeper()
 
-try:
-    from filedict import FileDict
-except:
-    print("There is a problem:\n" +
-          "If you want to use SQlite DB for this service, get FileDict from\n" +
-          "https://raw.github.com/pklaus/filedict/threadsafe/filedict.py\n" +
-          "and put it into the folder of this script.  Exiting now.")
-    sys.exit(1)
-keeper = URLKeeper(container=FileDict(filename='db.shorturls.sqlite3'))
+#try:
+#    from filedict import FileDict
+#except:
+#    print("There is a problem:\n" +
+#          "If you want to use SQlite DB for this service, get FileDict from\n" +
+#          "https://raw.github.com/pklaus/filedict/threadsafe/filedict.py\n" +
+#          "and put it into the folder of this script.  Exiting now.")
+#    sys.exit(1)
+#keeper = URLKeeper(container=FileDict(filename='db.shorturls.sqlite3'))
+
+from containerPlugins import RedisContainer
+keeper = URLKeeper(container=RedisContainer(host='localhost', port=6379, db=0))
 
 ### The web app itself
 
