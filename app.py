@@ -1,14 +1,26 @@
 #!/usr/bin/env python3
 
 """Bottle-based URL Shortener service"""
+
+import sys
 from shortener import URLKeeper
+from bottle import route, run, request, redirect, abort
+
+### Configuration of our Service
 
 #keeper = URLKeeper()
-## FileDict from https://raw.github.com/pklaus/filedict/threadsafe/filedict.py
-from filedict import FileDict
+
+try:
+    from filedict import FileDict
+except:
+    print("There is a problem:\n" +
+          "If you want to use SQlite DB for this service, get FileDict from\n" +
+          "https://raw.github.com/pklaus/filedict/threadsafe/filedict.py\n" +
+          "and put it into the folder of this script.  Exiting now.")
+    sys.exit(1)
 keeper = URLKeeper(container=FileDict(filename='db.shorturls.sqlite3'))
 
-from bottle import route, run, request, redirect, abort
+### The web app itself
 
 @route('/')
 def index():
