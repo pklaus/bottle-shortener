@@ -48,4 +48,7 @@ class URLKeeper(object):
         return len(self._container)
     
     def get_all_urls(self):
-        return dict(self._container)
+        urls = dict()
+        for key in self._container:
+            urls[key] = self._container[key]
+        return urls
