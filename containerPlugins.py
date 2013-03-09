@@ -19,19 +19,3 @@ class ContainerPlugin(object):
 class DictContainer(dict, ContainerPlugin):
     pass
 
-import sqlite3
-class SQLiteContainer(ContainerPlugin):
-    db = None
-    def __init__(self, dbfile=':memory:'):
-        self.dbfile = dbfile
-        try:
-            self.db = sqlite3.connect(dbfile)
-            self.db.row_factory = sqlite3.Row
-            self.cur = self.db.cursor()
-            self.cur.execute('SELECT SQLITE_VERSION()')
-            data = self.cur.fetchone()
-            print("SQLite version: %s" % data)
-        except lite.Error as e:
-            raise NameError("Error %s:" % e.args[0])
-    def _commit(self):
-        self.db.commit()
