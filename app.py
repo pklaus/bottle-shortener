@@ -53,7 +53,7 @@ def shorten_url():
 
     # let's create (and store) the shortened url
     short_url = keeper.create_short_url(url)
-    return {'error': '', 'result': request.urlparts[1] + '/go/' + short_url}
+    return {'error': '', 'result': request.urlparts[0] + '://' + request.urlparts[1] + '/go/' + short_url}
 
 
 if __name__ == '__main__':
