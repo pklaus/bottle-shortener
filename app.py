@@ -36,8 +36,7 @@ def urls(id):
     """Redirects to the original URL"""
     original_url = keeper.get_long_url(id)
     if original_url is None:
-        abort(404, "Sorry, unkown URL.")
-
+        abort(404, "Sorry, unknown URL.")
     redirect(original_url)
 
 @route('/shorten', method='GET')
