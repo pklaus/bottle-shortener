@@ -24,6 +24,8 @@ class RedisContainer(redis.StrictRedis, ContainerPlugin):
     """ Implementing a dictionary-like interface for Redis key-value pairs
         Probably an alternative implementation:
         https://github.com/wehlutyk/webquotes/blob/master/datainterface/redistools.py
+        And more inspiration:
+        https://github.com/gumuz/redisobj/blob/master/redisobj/redis_db.py
     """
     encoding = 'utf-8'
     # http://docs.python.org/3.3/reference/datamodel.html#sequence-types

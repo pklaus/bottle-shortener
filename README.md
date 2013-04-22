@@ -4,14 +4,15 @@ like a Python dictionary to store its data ('backend').
 
 #### Backends
 
-Currently it ships with the following backends:
+Currently it ships with the following data store backends:
 
 * Python dictionary  
   All shortened URLs are lost when restarting the service.
 * SQlite-Dictionary [FileDict](http://github.com/pklaus/filedict) for Python 3  
   Persistant storage in a database file.
 * redis Plugin  
-  Fast storage in memory; persistance possible via AOF (journal)
+  Fast storage in memory (RAM)   
+  Persistance [is possible](http://redis.io/topics/persistence) via AOF (journal).
 
 Other ideas for backends:
 
@@ -21,4 +22,5 @@ Other ideas for backends:
 
 #### Resources
 
-* This code is loosly based on the shortener contained in [urltotwit](https://bitbucket.org/tarek/urltotwit).
+* This code is loosly based on the shortener contained in
+  [urltotwit](https://bitbucket.org/tarek/urltotwit).
