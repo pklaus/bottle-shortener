@@ -1,6 +1,6 @@
 from string import ascii_letters, digits
 from random import choice
-from container_plugins import DictContainer
+from plugins import DictContainer
 
 class URLKeeper(object):
     CHARS = ascii_letters + digits
