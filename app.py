@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-"""Bottle-based URL Shortener service"""
+"""
+Bottle-based URL Shortener service
+"""
 
 import sys
 from shortener import URLKeeper
