@@ -22,7 +22,7 @@ from bottle import route, run, request, redirect, abort
 #    sys.exit(1)
 #keeper = URLKeeper(container=FileDict(filename='db.shorturls.sqlite3'))
 
-from containerPlugins import RedisContainer
+from container_plugins import RedisContainer
 keeper = URLKeeper(container=RedisContainer(host='localhost', port=6379, db=0))
 
 ### The web app itself
