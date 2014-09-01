@@ -43,7 +43,7 @@ class URLKeeper(object):
         key = str(short_url_id)
         try:
             return self._container[key]['long_url']
-        except KeyError:
+        except (KeyError, TypeError):
             return None
     
     def key_exists(self, key):
