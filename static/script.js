@@ -40,6 +40,8 @@ function show_success(url, short_form) {
   range.selectNodeContents(document.querySelectorAll('#short_url')[0]);
   selection.removeAllRanges();
   selection.addRange(range);
+  var num_entries  = document.querySelectorAll('#num_entries')[0];
+  num_entries.textContent = parseInt(num_entries.textContent) + 1;
   document.querySelectorAll('#success')[0].style.display = '';
 }
 
