@@ -16,8 +16,10 @@ class URLKeeper(object):
         """Creates and store a short url."""
         if self.long_url_exists(long_url):
             return self.get_long_url(short_url_id)
+        if short_url_id_request and self.key_exists(short_url_id_request):
+            raise NameError('Requested short URL exists already.')
         for tentative in range(self.MAX_TENTATIVE):
-            short_url_id = self._random_id()
+            short_url_id = short_url_id_request if short_url_id_request else self._random_id()
             key = '%s' % (short_url_id,)
             if not self.key_exists(key):
                 self._container[key] = long_url
