@@ -7,6 +7,7 @@ Bottle-based URL Shortener service
 import sys
 from shortener import URLKeeper
 from bottle import route, run, request, redirect, abort, static_file, jinja2_view as view
+from datetime import datetime as dt
 
 KEEPER = None
 BASE_URL = None
@@ -22,7 +23,7 @@ def index():
 
 @route('/stats')
 def statistics():
-    data = KEEPER.get_all_urls()
+    data = KEEPER.get_all_entries()
     return {'num_entries': len(data), 'data': data}
 
 @route('/<id>')
@@ -31,12 +32,15 @@ def urls(id):
     original_url = KEEPER.get_long_url(id)
     if original_url is None:
         abort(404, "Sorry, unknown URL.")
+    KEEPER.increment_hits(id)
     redirect(original_url)
 
 @route('/shorten', method='GET')
 def shorten_url():
     url = request.GET.get('url', None).strip()
     requesting = request.GET.get('requesting', None).strip()
+    ip = request.remote_addr
+    now = dt.utcnow().isoformat()
     if not url:
         return {'success': False, 'error': 'Need a URL'}
 
@@ -47,11 +51,15 @@ def shorten_url():
         return {'success': False, 'error': 'The requested short URL "{}" is already assigned.'.format(requesting)}
 
     # let's create (and store) the shortened url
+    context = {'ip': ip, 'dt': now}
     try:
-        short_url = KEEPER.create_short_url(url, short_url_id_request=requesting)
-        return {'success': True, 'result': BASE_URL + short_url}
+        short_id = KEEPER.create_short_url(url, short_url_id_request=requesting, context=context)
+        return {'success': True, 'result': short_url_from_key(short_id)}
     except NameError as e:
         return {'success': False, 'error': 'Could not create short URL: {}.'.format(e)}
+
+def short_url_from_key(key):
+    return BASE_URL + key
 
 def main():
     global KEEPER, BASE_URL
