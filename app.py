@@ -21,6 +21,11 @@ def static(path):
 def index():
     return {'num_entries': KEEPER.num_entries(), 'base_url': BASE_URL}
 
+@route('/clear')
+def clear():
+    """ Delete all entries in the DB """
+    KEEPER.delete_all_entries()
+
 @route('/stats')
 def statistics():
     data = KEEPER.get_all_entries()

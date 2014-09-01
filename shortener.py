@@ -55,7 +55,10 @@ class URLKeeper(object):
 
     def num_entries(self):
         return len(self._container)
-    
+   
+    def delete_all_entries(self):
+        self._container.clear()
+
     def get_all_urls(self):
         urls = dict()
         for key in self._container:

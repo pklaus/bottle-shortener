@@ -33,4 +33,6 @@ class RedisContainer(redis.StrictRedis, ContainerPlugin):
             yield key
     def __contains__(self, key):
         return self.exists(key)
+    def clear(self):
+        self.flushdb()
 

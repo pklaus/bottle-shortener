@@ -15,6 +15,8 @@ class ContainerPlugin(object):
         raise NotImplementedError()
     def __contains__(self, key):
         raise NotImplementedError()
+    def clear(self):
+        raise NotImplementedError()
 
 class DictContainer(dict, ContainerPlugin):
     pass
