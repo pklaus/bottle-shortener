@@ -1,6 +1,7 @@
 
 from . import ContainerPlugin
 import redis
+import pickle
 
 class RedisContainer(redis.StrictRedis, ContainerPlugin):
     """ Implementing a dictionary-like interface for Redis key-value pairs
@@ -14,10 +15,12 @@ class RedisContainer(redis.StrictRedis, ContainerPlugin):
     def __len__(self):
         return self.dbsize()
     def __getitem__(self, key):
-        value = self.get(key)
-        if value: return value.decode(self.encoding)
+        pickled_value = self.get(key)
+        if pickled_value is None:
+            return None
+        return pickle.loads(pickled_value)
     def __setitem__(self, key, value):
-        self.set(key, value)
+        self.set(key, pickle.dumps(value))
     def __delitem__(self, key):
         self.delete(key)
     def keys(self):
