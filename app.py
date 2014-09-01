@@ -11,6 +11,7 @@ from datetime import datetime as dt
 
 KEEPER = None
 BASE_URL = None
+KEY_LENGTH = None
 
 @route('/static/<path:path>')
 def static(path):
@@ -58,7 +59,7 @@ def shorten_url():
     # let's create (and store) the shortened url
     context = {'ip': ip, 'dt': now}
     try:
-        short_id = KEEPER.create_short_url(url, short_url_id_request=requesting, context=context)
+        short_id = KEEPER.create_short_url(url, short_url_id_request=requesting, context=context, key_length=KEY_LENGTH)
         return {'success': True, 'result': short_url_from_key(short_id)}
     except NameError as e:
         return {'success': False, 'error': 'Could not create short URL: {}.'.format(e)}
@@ -67,11 +68,12 @@ def short_url_from_key(key):
     return BASE_URL + key
 
 def main():
-    global KEEPER, BASE_URL
+    global KEEPER, BASE_URL, KEY_LENGTH
 
     import argparse
     import socket
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--key-length', default=4, type=int, help='The default number of letters for your short URLs.')
     parser.add_argument('--plugin', help='The data persistance plugin URL, such as "redis://localhost:6379/0" or "filedict://db.shorturls.sqlite3"')
     parser.add_argument('--server-adapter', default='cherrypy', help='Which server to run this web app on. (If you only want IPv4, you may use "wsgiref").')
     parser.add_argument('--base-url', default='http://{}/'.format(socket.gethostname()), help='The base URL of this service.')
@@ -82,6 +84,7 @@ def main():
     args = parser.parse_args()
 
     BASE_URL = args.base_url
+    KEY_LENGTH = args.key_length
     if not args.plugin:
         KEEPER = URLKeeper()
     elif args.plugin.lower().startswith('filedict://'):

@@ -12,14 +12,14 @@ class URLKeeper(object):
     def _random_id(self, length=10):
         return ''.join([choice(self.CHARS) for i in range(length)])
     
-    def create_short_url(self, long_url, short_url_id_request=None, context={}):
+    def create_short_url(self, long_url, short_url_id_request=None, context={}, key_length=10):
         """Creates and store a short url."""
         if self.long_url_exists(long_url):
             return self.get_long_url(short_url_id)
         if short_url_id_request and self.key_exists(short_url_id_request):
             raise NameError('Requested short URL exists already.')
         for tentative in range(self.MAX_TENTATIVE):
-            key = short_url_id_request if short_url_id_request else self._random_id()
+            key = short_url_id_request if short_url_id_request else self._random_id(key_length)
             key = str(key)
             entry = {'long_url': long_url, 'context': context, 'hits': 0}
             if not self.key_exists(key):
