@@ -58,11 +58,14 @@ def main():
         KEEPER = URLKeeper()
     elif args.plugin.lower().startswith('filedict://'):
         try:
+            from plugins import ContainerPlugin
             from filedict import FileDict
         except ImportError:
             parser.error('There is a problem: Get FileDict from "https://github.com/pklaus/filedict/blob/threadsafe/filedict.py" '
                   'and put it into the folder of this script. Exiting now.')
-        KEEPER = URLKeeper(container=FileDict(filename=args.plugin.replace('filedict://','')))
+        class FileDictContainer(FileDict, ContainerPlugin):
+            pass
+        KEEPER = URLKeeper(container=FileDictContainer(filename=args.plugin.replace('filedict://','')))
     
     elif args.plugin.lower().startswith('redis://'):
         try:
