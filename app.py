@@ -6,20 +6,26 @@ Bottle-based URL Shortener service
 
 import sys
 from shortener import URLKeeper
-from bottle import route, run, request, redirect, abort
+from bottle import route, run, request, redirect, abort, static_file, jinja2_view as view
 
 KEEPER = None
+BASE_URL = None
+
+@route('/static/<path:path>')
+def static(path):
+    return static_file(path, root='./static/')
 
 @route('/')
+@view('index.jinja2')
 def index():
-    return 'I am the URL Shortener! I currently have %i shortened URLs in my books.' % KEEPER.num_entries()
+    return {'num_entries': KEEPER.num_entries(), 'base_url': BASE_URL}
 
 @route('/stats')
 def statistics():
     data = KEEPER.get_all_urls()
     return {'num_entries': len(data), 'data': data}
 
-@route('/go/:id')
+@route('/<id>')
 def urls(id):
     """Redirects to the original URL"""
     original_url = KEEPER.get_long_url(id)
@@ -29,31 +35,40 @@ def urls(id):
 
 @route('/shorten', method='GET')
 def shorten_url():
-    url = request.GET.get('url', '').strip()
-    if url == '':
-        return {'error': 'Need an url', 'result': ''}
+    url = request.GET.get('url', None).strip()
+    requesting = request.GET.get('requesting', None).strip()
+    if not url:
+        return {'success': False, 'error': 'Need a URL'}
 
     if not KEEPER.valid_long_url(url):
-        return {'error': 'The URL needs to start with http:// or https://', 'result': ''}
+        return {'success': False, 'error': 'The URL needs to start with http:// or https://'}
+
+    if requesting and KEEPER.get_long_url(requesting) is not None:
+        return {'success': False, 'error': 'The requested short URL "{}" is already assigned.'.format(requesting)}
 
     # let's create (and store) the shortened url
-    short_url = KEEPER.create_short_url(url)
-    return {'error': '', 'result': request.urlparts[0] + '://' + request.urlparts[1] + '/go/' + short_url}
-
+    try:
+        short_url = KEEPER.create_short_url(url, short_url_id_request=requesting)
+        return {'success': True, 'result': BASE_URL + short_url}
+    except NameError as e:
+        return {'success': False, 'error': 'Could not create short URL: {}.'.format(e)}
 
 def main():
-    global KEEPER
+    global KEEPER, BASE_URL
 
     import argparse
+    import socket
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--plugin', help='The data persistance plugin URL, such as "redis://localhost:6379/0" or "filedict://db.shorturls.sqlite3"')
     parser.add_argument('--server-adapter', default='cherrypy', help='Which server to run this web app on. (If you only want IPv4, you may use "wsgiref").')
+    parser.add_argument('--base-url', default='http://{}/'.format(socket.gethostname()), help='The base URL of this service.')
     parser.add_argument('--host', default='::', help='The host/IP to bind the server to. Use "0.0.0.0" if you want IPv4 only.')
     parser.add_argument('--port', default=8080, type=int, help='The port the server should listen at. Default: 8080.')
     parser.add_argument('--debug', action='store_true', help='Enable debugging mode.')
 
     args = parser.parse_args()
 
+    BASE_URL = args.base_url
     if not args.plugin:
         KEEPER = URLKeeper()
     elif args.plugin.lower().startswith('filedict://'):
