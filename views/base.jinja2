@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}URL Shortener{% endblock %}</title>
+    <link rel="stylesheet" href="/static/min.min.css"> <!-- Uses min (minfwk.com) -->
+    {% block additional_head %}{% endblock %}
+    <style>
+      .header { background-color: #0b0c27; }
+      input.url { width: 95%; height: 3ex; font-size: large; }
+      input.requesting { width: 10em; height: 2ex; font-size: normal; }
+      input.submit { float: right; margin-right: 2%; }
+      div.proposal { color: #AAA; margin-top: 2ex; overflow: hidden; }
+      div#error { margin: 1em 0em; background-color: #F99; color: #666; padding: 0.5em 1em; border-radius: 15px; }
+      #orig_url { font-family: monospace; color: #003; }
+      p#short_url { size: x-large; background-color: #CCC; color: #333; font-weight: bold; padding: 0.5em 1em; border-radius: 12px; border: 1px solid #CCC; margin: 2ex 2em; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header"></div>
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
+

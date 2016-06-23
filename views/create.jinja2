@@ -1,0 +1,38 @@
+{% extends "base.jinja2" %}
+
+{% block additional_head %}
+    <script src="/static/custom.js"></script>
+{% endblock %}
+
+{% block content %}
+      <div class="row">
+        <div class="col c3">&nbsp;</div>
+        <div class="col c6">
+          <h1>URL Shortener</h1>
+          <div id="newentry">
+            <p>I can shorten your URL! Give it a shot:</p>
+            <div id="error" style="display: none;"><span id="error_message"></span></div>
+            <form name="new" action="/new" method="GET">
+              <input name="url" placeholder="Enter a long URL here..." type="text" class="smooth url">
+              <div class="proposal">
+                {{base_url}} <input name="requesting" placeholder="your_choice (optional)" type="text" class="smooth requesting">
+                <input type="button" class="btn btn-sm btn-b smooth submit" value="Request" onclick="javascript: ajax_submit()">
+              </div>
+            </form>
+          </div>
+          <div id="success" style="display: none;">
+            <h2>Success</h2>
+            <p>You created a short URL for <span id="orig_url"></span>:</p>
+            <p id="short_url"></p>
+          </div>
+        </div>
+        <div class="col c3">&nbsp;</div>
+      </div>
+      <div class="row">
+        <div class="col c3">&nbsp;</div>
+        <div class="col c6">
+          <p>Currently, there are <span id='num_entries'>{{num_entries}}</span> shortened URLs in my books.</p>
+        </div>
+        <div class="col c3">&nbsp;</div>
+      </div>
+{% endblock %}

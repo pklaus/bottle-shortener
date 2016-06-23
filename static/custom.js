@@ -3,9 +3,9 @@
 function ajax_submit() {
   request = new XMLHttpRequest();
   var url, requesting;
-  url = document.forms['shorten']['url'].value;
-  requesting = document.forms['shorten']['requesting'].value;
-  request.open('GET', '/shorten?url='+url+'&requesting='+requesting, true);
+  url = document.forms['new']['url'].value;
+  requesting = document.forms['new']['requesting'].value;
+  request.open('GET', '/new?url='+url+'&requesting='+requesting, true);
 
   request.onload = function() {
     if (this.status >= 200 && this.status < 400){

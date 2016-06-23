@@ -22,6 +22,11 @@ def static(path):
 def index():
     return {'num_entries': KEEPER.num_entries(), 'base_url': BASE_URL}
 
+@route('/create')
+@view('create.jinja2')
+def index():
+    return {'num_entries': KEEPER.num_entries(), 'base_url': BASE_URL}
+
 @route('/clear')
 def clear():
     """ Delete all entries in the DB """
@@ -41,8 +46,8 @@ def urls(id):
     KEEPER.increment_hits(id)
     redirect(original_url)
 
-@route('/shorten', method='GET')
-def shorten_url():
+@route('/new', method='GET')
+def new_shortened_url():
     url = request.GET.get('url', None).strip()
     requesting = request.GET.get('requesting', None).strip()
     ip = request.remote_addr
